@@ -13,7 +13,7 @@ function App() {
   const [gameState, setGameState] = useState(renderFrom);
   const [currentPlayer, setCurrentPlayer] = useState('circle');
   const [finishedState, setFinishedState] = useState(false);
-  const [finishedArrayState, setFinishedArrayState] = useState([]); //? For wining bg-color
+  const [finishedArrayState, setFinishedArrayState] = useState([]); //? For winning bg-color
 
   const checkWinner = () => {
     //? row wise winning logic
