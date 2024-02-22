@@ -2,7 +2,7 @@
   display: flex;
   justify-content: center;
   align-content: center;
-  margin-top: 10vh;
+  margin-top: 5vh;
 }
 
 .water-background {
@@ -42,4 +42,10 @@
   font-size: 18px;
   font-weight: 800;
   font-family: serif;
+}
+
+.finished-state {
+  font-size: 30px;
+  margin-top: 10px;
+  text-align: center;
 }
