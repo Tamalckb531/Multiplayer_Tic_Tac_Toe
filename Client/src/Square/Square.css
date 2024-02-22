@@ -1,0 +1,10 @@
+.sqaure {
+  width: 100px;
+  height: 100px;
+  background-color: var(--water-bg);
+  border-radius: 5px;
+}
+
+.sqaure:hover {
+  cursor: pointer;
+}
