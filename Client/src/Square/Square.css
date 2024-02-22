@@ -12,3 +12,11 @@
 .not-allowed {
   cursor: not-allowed !important;
 }
+
+.circle-won {
+  background-color: var(--circle);
+}
+
+.cross-won {
+  background-color: var(--cross);
+}
