@@ -14,6 +14,7 @@ function App() {
   const [currentPlayer, setCurrentPlayer] = useState('circle');
   const [finishedState, setFinishedState] = useState(false);
   const [finishedArrayState, setFinishedArrayState] = useState([]); //? For winning bg-color
+  const [playOnline, setPlayOnline] = useState(false);
 
   const checkWinner = () => {
     //? row wise winning logic
@@ -63,6 +64,12 @@ function App() {
       setFinishedState(winner);
     }
   }, [gameState]);
+
+  if (!playOnline) {
+    return <div className='main-div'>
+      <button className='playOnline'>Play Online</button>
+    </div>
+  }
 
 
   return (
