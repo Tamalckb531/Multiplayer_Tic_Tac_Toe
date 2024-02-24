@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 import Square from './Square/Square'
+import { io } from 'socket.io-client'
 
 const renderFrom = [
   [1, 2, 3],
@@ -15,6 +16,7 @@ function App() {
   const [finishedState, setFinishedState] = useState(false);
   const [finishedArrayState, setFinishedArrayState] = useState([]); //? For winning bg-color
   const [playOnline, setPlayOnline] = useState(false);
+  const [socket, setSocket] = useState(null);
 
   const checkWinner = () => {
     //? row wise winning logic
@@ -65,9 +67,20 @@ function App() {
     }
   }, [gameState]);
 
+  socket?.on("connect", function () {
+    setPlayOnline(true);
+  });
+
+  function playOnlineClick() {
+    const newSocket = io("http://localhost:3000", {
+      autoConnect: true,
+    });
+    setSocket(newSocket);
+  }
+
   if (!playOnline) {
     return <div className='main-div'>
-      <button className='playOnline'>Play Online</button>
+      <button onClick={playOnlineClick} className='playOnline'>Play Online</button>
     </div>
   }
 
