@@ -63,3 +63,27 @@
   margin-top: 10px;
   text-align: center;
 }
+
+.waiting {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  font-size: 2.5rem;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+}
+
+.pt-5 {
+  padding-top: 15px;
+}
+
+.current-move-cross {
+  background-color: var(--cross) !important;
+}
+
+.current-move-circle {
+  background-color: var(--circle) !important;
+}
