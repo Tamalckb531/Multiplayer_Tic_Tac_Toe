@@ -12,45 +12,49 @@ const renderFrom = [
 
 function App() {
 
-  const [gameState, setGameState] = useState(renderFrom);
-  const [currentPlayer, setCurrentPlayer] = useState('circle');
-  const [finishedState, setFinishedState] = useState(false);
+  const [gameState, setGameState] = useState(renderFrom); //?Array of index of the game
+  const [currentPlayer, setCurrentPlayer] = useState('circle'); //? First player get the circle
+  const [finishedState, setFinishedState] = useState(false); //? decide game is finished or not
   const [finishedArrayState, setFinishedArrayState] = useState([]); //? For winning bg-color
-  const [playOnline, setPlayOnline] = useState(false);
+  const [playOnline, setPlayOnline] = useState(false); //?
   const [socket, setSocket] = useState(null);
   const [playerName, setPlayerName] = useState('');
   const [opponentName, setOpponentName] = useState(null);
   const [playingAs, setPlayingAs] = useState(null);
 
+  console.log(gameState.length);
+
   const checkWinner = () => {
     //? row wise winning logic
     for (let row = 0; row < gameState.length; row++) {
-      if (gameState[row][0] === gameState[row][1] && gameState[row][1] === gameState[row][2]) {
-        setFinishedArrayState([row * 3 + 0, row * 3 + 1, row * 3 + 2])
+      if (gameState[row][0] === gameState[row][1] && gameState[row][1] === gameState[row][2]) { //? All column of a row is matched
+        setFinishedArrayState([row * 3 + 0, row * 3 + 1, row * 3 + 2]); //? row*3 -> define the winning row, +0/1/2 -> define all column of that row. (do color change)
         return gameState[row][0];
       }
     }
 
     //? column wise winning logic
     for (let col = 0; col < gameState.length; col++) {
-      if (gameState[0][col] === gameState[1][col] && gameState[1][col] === gameState[2][col]) {
-        setFinishedArrayState([0 * 3 + col, 1 * 3 + col, 2 * 3 + col])
+      if (gameState[0][col] === gameState[1][col] && gameState[1][col] === gameState[2][col]) { //? All row of a column is matched
+        setFinishedArrayState([0 * 3 + col, 1 * 3 + col, 2 * 3 + col]); //? row(0/1/2)*3+col -> take all the row than multiply with 3 with wining column makes the wining column identified (do color change)
         return gameState[0][col];
       }
     }
 
     //?cross wise winning logic
-    if (gameState[0][0] === gameState[1][1] && gameState[1][1] === gameState[2][2]) {
+    if (gameState[0][0] === gameState[1][1] && gameState[1][1] === gameState[2][2]) { //? Left cross logic
       setFinishedArrayState([0, 4, 8]);
       return gameState[0][0];
     }
-    if (gameState[0][2] === gameState[1][1] && gameState[1][1] === gameState[2][0]) {
+    if (gameState[0][2] === gameState[1][1] && gameState[1][1] === gameState[2][0]) { //? Right cross logic
       setFinishedArrayState([2, 4, 6]);
       return gameState[0][2];
     }
 
+    //* returning gamestate means -> returing the wining icon : 'circle'/'cross'/'draw'
+
     //? Match draw 
-    const isDrawMatch = gameState.flat().every((e) => {
+    const isDrawMatch = gameState.flat().every((e) => { //? Make sure every element has either circle or cross
       if (e === 'circle' || e === 'cross') {
         return true;
       }
