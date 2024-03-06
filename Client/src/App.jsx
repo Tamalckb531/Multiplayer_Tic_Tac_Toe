@@ -14,15 +14,13 @@ function App() {
 
   const [gameState, setGameState] = useState(renderFrom); //?Array of index of the game
   const [currentPlayer, setCurrentPlayer] = useState('circle'); //? First player get the circle
-  const [finishedState, setFinishedState] = useState(false); //? decide game is finished or not
+  const [finishedState, setFinishedState] = useState(false); //? decide game is finished or not -> store the winner 'circle'/'cross'/'draw'
   const [finishedArrayState, setFinishedArrayState] = useState([]); //? For winning bg-color
   const [playOnline, setPlayOnline] = useState(false); //?
   const [socket, setSocket] = useState(null);
   const [playerName, setPlayerName] = useState('');
   const [opponentName, setOpponentName] = useState(null);
   const [playingAs, setPlayingAs] = useState(null);
-
-  console.log(gameState.length);
 
   const checkWinner = () => {
     //? row wise winning logic
@@ -67,6 +65,7 @@ function App() {
     return null;
   }
 
+  //? Everytime gameState change -> it checks if anyone won -> if won then it sets a winner 'circle'/'cross'/'draw' in the finishedState
   useEffect(() => {
     const winner = checkWinner();
 
@@ -88,6 +87,7 @@ function App() {
       }
     });
 
+    //* result.value -> is the user name.
     return result;
   }
 
