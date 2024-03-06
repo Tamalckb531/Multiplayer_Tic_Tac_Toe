@@ -153,6 +153,7 @@ function App() {
 
   const playerMoveClass = currentPlayer === playingAs ? "current-move-" + currentPlayer : "";
   const opponentMoveClass = currentPlayer !== playingAs ? "current-move-" + currentPlayer : "";
+  const winning = finishedState ? "You won!" : ""; //! Bug
 
 
   return (
@@ -193,7 +194,7 @@ function App() {
       </div>
       {finishedState && finishedState === "opponentLeftMatch" &&
         (<h3 className='finished-state'>
-          You won! Opponent Left The Match.
+          {winning} Opponent Left The Match. {/*//! Bug: After game over, if opponent left, still gonna show the "You win!" */}
         </h3>)
       }
       {!finishedState && opponentName &&
@@ -204,3 +205,6 @@ function App() {
 }
 
 export default App
+
+
+//! Bug on random player mode : There is no separation within players. Three players getting connected with each other and creating a total mess 
