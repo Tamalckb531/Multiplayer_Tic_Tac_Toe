@@ -16,12 +16,13 @@ function App() {
   const [currentPlayer, setCurrentPlayer] = useState('circle'); //? First player get the circle
   const [finishedState, setFinishedState] = useState(false); //? decide game is finished or not -> store the winner 'circle'/'cross'/'draw'
   const [finishedArrayState, setFinishedArrayState] = useState([]); //? For winning bg-color
-  const [playOnline, setPlayOnline] = useState(false); //?
-  const [socket, setSocket] = useState(null);
+  const [playOnline, setPlayOnline] = useState(false); //? Store true if a socket successfully generated for a user
+  const [socket, setSocket] = useState(null); //? store the newly connected socket in created inside playOnlineClick 
   const [playerName, setPlayerName] = useState('');
   const [opponentName, setOpponentName] = useState(null);
   const [playingAs, setPlayingAs] = useState(null);
 
+  //* check who is the winner -> Set the winner in finishedState -> Set the wining tiles in finishedArrayState -> check the game is draw or not 
   const checkWinner = () => {
     //? row wise winning logic
     for (let row = 0; row < gameState.length; row++) {
@@ -65,7 +66,7 @@ function App() {
     return null;
   }
 
-  //? Everytime gameState change -> it checks if anyone won -> if won then it sets a winner 'circle'/'cross'/'draw' in the finishedState
+  //* Everytime gameState change -> it checks if anyone won -> if won then it sets a winner 'circle'/'cross'/'draw' in the finishedState
   useEffect(() => {
     const winner = checkWinner();
 
@@ -74,6 +75,7 @@ function App() {
     }
   }, [gameState]);
 
+  //* Throw a model -> take player name -> set all the details in takePlayerName
   const takePlayerName = async () => {
     const result = await Swal.fire({
       title: "Player Name",
@@ -90,6 +92,11 @@ function App() {
     //* result.value -> is the user name.
     return result;
   }
+
+  //* Get trigger by the autoConnect: true of io inside playOnlineClick -> set the playOnline state true as player got connected to the server
+  socket?.on("connect", function () {
+    setPlayOnline(true);
+  });
 
   socket?.on("opponentLeftMatch", () => {
     setFinishedState("opponentLeftMatch");
@@ -108,10 +115,6 @@ function App() {
     setCurrentPlayer(data.state.sign === "circle" ? "cross" : "circle");
   })
 
-  socket?.on("connect", function () {
-    setPlayOnline(true);
-  });
-
   socket?.on("OpponentNotFound", function () {
     setOpponentName(false);
   });
@@ -121,28 +124,34 @@ function App() {
     setOpponentName(data.opponentName);
   });
 
+  //* Get triggered when user click the play online button -> take the all details of playername -> set username in setPlayerName -> create a new socket for that player -> emit a event for playing with data as username -> set the new socket in socket state
   async function playOnlineClick() {
 
-    const result = await takePlayerName();
+    const result = await takePlayerName(); //? take details from modal
 
-    if (!result.isConfirmed) {
+    if (!result.isConfirmed) { //? true when user entered there name
       return;
     }
 
+    //? setting the playerName
     const username = result.value;
     setPlayerName(username);
 
+    //? creating a new web socket for the user and ensuring it get autoconnect to the server when the client site socket is created 
     const newSocket = io("http://localhost:3000", {
       autoConnect: true,
     });
 
+    //? This creating a playing event with username as data
     newSocket?.emit("request_to_play", {
       playerName: username,
     })
 
+    //? setting the newSocket connection in the socket state
     setSocket(newSocket);
   }
 
+  //* connect player with the game if the player is just entered -> trigger playOnlineClick
   if (!playOnline) {
     return <div className='main-div'>
       <button onClick={playOnlineClick} className='playOnline'>Play Online</button>
