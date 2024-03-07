@@ -1,6 +1,7 @@
 const { createServer } = require("http");
 const { Server } = require("socket.io");
 
+//? Creation of a new web socket server 
 const httpServer = createServer();
 const io = new Server(httpServer, {
     cors: "http://localhost:5173/",
