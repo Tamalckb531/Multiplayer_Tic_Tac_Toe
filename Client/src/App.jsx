@@ -218,6 +218,3 @@ function App() {
 }
 
 export default App
-
-
-//! Bug on random player mode : There is no separation within players. Three players getting connected with each other and creating a total mess 

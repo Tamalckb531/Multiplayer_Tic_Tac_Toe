@@ -7,22 +7,29 @@ const io = new Server(httpServer, {
     cors: "http://localhost:5173/",
 });
 
-const allUsers = {};
+const allUsers = {}; //? store all the users information that are connected to the server 
 const allRooms = [];
 
+//* Trigger whenever a client successfully connects to web socket server
+//? socket represents the socket connection between client and server
 io.on("connection", (socket) => {
 
+    //? socket.id -> Unique Identity for all users that joined the server
+
+    //? for each socket.id , it's storing the coresponding socket connection and online state to true.
     allUsers[socket.id] = {
         socket: socket,
-        online: true
+        online: true,
+        playing: false
     }
 
     socket.on("request_to_play", (data) => {
-        const currentUser = allUsers[socket.id];
-        currentUser.playerName = data.playerName;
+        const currentUser = allUsers[socket.id]; //? get the socket of newly connected player
+        currentUser.playerName = data.playerName; //? add the playername that came from modal 
 
         let opponentPlayer;
 
+        //? Selection of the opponent player
         for (const key in allUsers) {
             const user = allUsers[key];
             if (user.online && !user.playing && socket.id !== key) {
@@ -32,6 +39,9 @@ io.on("connection", (socket) => {
         }
 
         if (opponentPlayer) {
+
+            currentUser.playing = true;
+            opponentPlayer.playing = true;
 
             allRooms.push({
                 player1: opponentPlayer,
@@ -68,7 +78,7 @@ io.on("connection", (socket) => {
     socket.on("disconnect", function () {
         const currentUser = allUsers[socket.id];
         currentUser.online = false;
-        currentUser: playing = false;
+        currentUser.playing = false;
 
         for (let index = 0; index < allRooms.length; index++) {
             const { player1, player2 } = allRooms[index];
