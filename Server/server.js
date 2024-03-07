@@ -20,7 +20,7 @@ io.on("connection", (socket) => {
     allUsers[socket.id] = {
         socket: socket,
         online: true,
-        playing: false
+        playing: false //! Important : It was creating the bug of more than two player getting connected to one game
     }
 
     socket.on("request_to_play", (data) => {
@@ -32,7 +32,7 @@ io.on("connection", (socket) => {
         //? Selection of the opponent player
         for (const key in allUsers) {
             const user = allUsers[key];
-            if (user.online && !user.playing && socket.id !== key) {
+            if (user.online && !user.playing && socket.id !== key) { //? checking three things 1. if the opponent online, 2. if the opponent is already playing or not, 3. If the id is not similar to currentUser
                 opponentPlayer = user;
                 break;
             }
